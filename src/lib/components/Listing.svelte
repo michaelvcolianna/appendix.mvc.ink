@@ -27,7 +27,7 @@
     <ol class="gap-4 grid lg:grid-cols-2">
       {#each cards as card}
         <li class="gap-4 grid grid-cols-[64px_1fr]">
-          {#if $spoilers === 'show' && card.content.fcoeImage}
+          {#if $spoilers === 'show' && card.content.fcoeImage?.filename}
             <Hero image={card.content.fcoeImage} />
           {:else}
             <Hero image={card.content.image} />

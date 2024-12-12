@@ -30,9 +30,9 @@
       </span>
     </Heading>
 
-    {#if $spoilers === 'show' && page.content.fcoeImage}
+    {#if $spoilers === 'show' && page.content.fcoeImage?.filename}
       <Hero image={page.content.fcoeImage} dimension={256} />
-    {:else}
+    {:else if $spoilers === 'hide' && page.content.image?.filename}
       <Hero image={page.content.image} dimension={256} />
     {/if}
 
