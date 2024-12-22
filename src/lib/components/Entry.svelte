@@ -30,8 +30,8 @@
       </span>
     </Heading>
 
-    {#if $spoilers === 'show' && page.content.fcoeImage?.filename || page.content.image?.filename}
-      <Hero image={page.content.fcoeImage || page.content.image} dimension={256} />
+    {#if $spoilers === 'show' && (page.content.fcoeImage?.filename || page.content.image?.filename)}
+      <Hero image={page.content.fcoeImage?.filename ? page.content.fcoeImage : page.content.image} dimension={256} />
     {:else if $spoilers === 'hide' && page.content.image?.filename}
       <Hero image={page.content.image} dimension={256} />
     {/if}
