@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SbImage from '$lib/SbImage.svelte';
   import {
     buildSrcset,
     imageAlt,
@@ -7,8 +8,14 @@
   } from '$lib/storyblok';
   import type { PageData } from './$types';
 
-  const HERO_WIDTHS = [360, 480, 640, 768, 960, 1280, 1600, 1920];
-  const HERO_SIZES = '(min-width: 1016px) 904px, calc(100vw - 56px)';
+  // Hero spans the full main-inner column (capped at 960px content).
+  const HERO_VARIANTS = [
+    { media: '(min-width: 808px)', width: 960 },
+    { media: '(min-width: 600px)', width: 768 },
+    { media: '(min-width: 416px)', width: 540 },
+    { width: 360 }
+  ] as const;
+  // Thumbs are 52px square; DPR scaling matters more than layout, so keep srcset.
   const THUMB_WIDTHS = [56, 112, 168];
   const THUMB_SIZES = '52px';
 
@@ -27,15 +34,11 @@
 <div class="category-header">
   {#if listing.content.image?.filename}
     <div class="hero-image-wrap">
-      <img
-        src={transformImageUrl(listing.content.image.filename, 1280)}
-        srcset={buildSrcset(listing.content.image.filename, HERO_WIDTHS)}
-        sizes={HERO_SIZES}
-        alt={imageAlt(
-          listing.content.image,
-          listing.name,
-          `category hero: ${categorySlug}`
-        )}
+      <SbImage
+        asset={listing.content.image}
+        fallbackAlt={listing.name}
+        context={`category hero: ${categorySlug}`}
+        variants={HERO_VARIANTS}
       />
       <div class="hero-overlay"></div>
       <h1 class="hero-title">{listing.name}</h1>
@@ -95,7 +98,7 @@
     margin-bottom: var(--space-md);
   }
 
-  .hero-image-wrap img {
+  .hero-image-wrap :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;

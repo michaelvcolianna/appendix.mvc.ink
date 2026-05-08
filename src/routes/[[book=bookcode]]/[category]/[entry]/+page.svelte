@@ -1,15 +1,11 @@
 <script lang="ts">
   import { renderMarkdown } from '$lib/markdown';
-  import {
-    buildSrcset,
-    imageAlt,
-    transformImageUrl,
-    withBook
-  } from '$lib/storyblok';
+  import SbImage from '$lib/SbImage.svelte';
+  import { withBook } from '$lib/storyblok';
   import type { PageData } from './$types';
 
-  const ENTRY_IMAGE_WIDTHS = [360, 540, 720, 1080];
-  const ENTRY_IMAGE_SIZES = 'min(360px, calc(100vw - 56px))';
+  // Container is capped at 360px CSS-px wide; one variant covers all viewports.
+  const ENTRY_IMAGE_VARIANTS = [{ width: 360 }] as const;
 
   let { data }: { data: PageData } = $props();
 
@@ -30,15 +26,11 @@
 <article>
   {#if fields.image?.filename}
     <div class="entry-image-wrap">
-      <img
-        src={transformImageUrl(fields.image.filename, 720)}
-        srcset={buildSrcset(fields.image.filename, ENTRY_IMAGE_WIDTHS)}
-        sizes={ENTRY_IMAGE_SIZES}
-        alt={imageAlt(
-          fields.image,
-          fields.displayName,
-          `entry image: ${category}/${fields.displayName}`
-        )}
+      <SbImage
+        asset={fields.image}
+        fallbackAlt={fields.displayName}
+        context={`entry image: ${category}/${fields.displayName}`}
+        variants={ENTRY_IMAGE_VARIANTS}
       />
     </div>
   {/if}
@@ -95,7 +87,7 @@
     box-shadow: 0 4px 20px #0000001f;
   }
 
-  .entry-image-wrap img {
+  .entry-image-wrap :global(img) {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
@@ -200,7 +192,7 @@
       box-shadow: 0 2px 10px #00000014;
     }
 
-    .entry-image-wrap img {
+    .entry-image-wrap :global(img) {
       transition: transform var(--dur-med) var(--ease);
     }
   }

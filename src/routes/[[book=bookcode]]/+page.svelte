@@ -1,15 +1,17 @@
 <script lang="ts">
   import { renderMarkdown } from '$lib/markdown';
-  import {
-    buildSrcset,
-    imageAlt,
-    transformImageUrl,
-    withBook
-  } from '$lib/storyblok';
+  import SbImage from '$lib/SbImage.svelte';
+  import { withBook } from '$lib/storyblok';
   import type { PageData } from './$types';
 
-  const CARD_WIDTHS = [360, 480, 640, 768, 960];
-  const CARD_SIZES = '(min-width: 960px) 440px, calc(100vw - 56px)';
+  // Desktop ≥960px: 2-column grid, card ~440px. Below: 1-column, card = 100vw - 56px.
+  const CARD_VARIANTS = [
+    { media: '(min-width: 960px)', width: 480 },
+    { media: '(min-width: 768px)', width: 960 },
+    { media: '(min-width: 540px)', width: 768 },
+    { media: '(min-width: 416px)', width: 540 },
+    { width: 360 }
+  ] as const;
 
   let { data }: { data: PageData } = $props();
 </script>
@@ -27,15 +29,11 @@
     <a href={withBook(data.book, '/' + listing.slug)} class="category-card">
       {#if listing.content.image?.filename}
         <div class="card-image-wrap">
-          <img
-            src={transformImageUrl(listing.content.image.filename, 640)}
-            srcset={buildSrcset(listing.content.image.filename, CARD_WIDTHS)}
-            sizes={CARD_SIZES}
-            alt={imageAlt(
-              listing.content.image,
-              listing.name,
-              `home card: ${listing.slug}`
-            )}
+          <SbImage
+            asset={listing.content.image}
+            fallbackAlt={listing.name}
+            context={`home card: ${listing.slug}`}
+            variants={CARD_VARIANTS}
           />
         </div>
       {/if}
@@ -94,7 +92,7 @@
     aspect-ratio: 11 / 6;
   }
 
-  .card-image-wrap img {
+  .card-image-wrap :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -126,7 +124,7 @@
         transform var(--dur-med) var(--ease);
     }
 
-    .card-image-wrap img {
+    .card-image-wrap :global(img) {
       transition: transform var(--dur-med) var(--ease);
     }
 
@@ -136,7 +134,7 @@
       transform: translateY(-2px);
     }
 
-    .category-card:hover .card-image-wrap img {
+    .category-card:hover .card-image-wrap :global(img) {
       transform: scale(1.03);
     }
   }
