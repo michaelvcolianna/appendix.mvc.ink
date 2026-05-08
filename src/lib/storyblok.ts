@@ -97,7 +97,7 @@ export function transformImageUrl(
 ): string | null | undefined {
   if (!url) return url;
   const rebased = url.replace(
-    'https://a-us.storyblok.com',
+    /^https:\/\/(?:s3\.amazonaws\.com\/)?a-us\.storyblok\.com/,
     'https://assets.mvc.ink'
   );
   // Strip any pre-existing /m/ or /m/WxH suffix so callers can re-target a width
