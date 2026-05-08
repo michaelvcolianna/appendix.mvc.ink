@@ -92,10 +92,40 @@ export function stripBookPrefix(
 }
 
 export function transformImageUrl(
-  url: string | null | undefined
+  url: string | null | undefined,
+  width?: number
 ): string | null | undefined {
   if (!url) return url;
-  return url.replace('https://a-us.storyblok.com', 'https://assets.mvc.ink');
+  const rebased = url.replace(
+    'https://a-us.storyblok.com',
+    'https://assets.mvc.ink'
+  );
+  // Strip any pre-existing /m/ or /m/WxH suffix so callers can re-target a width
+  const stripped = rebased.replace(/\/m(?:\/\d+x\d+)?\/?$/, '');
+  return width ? `${stripped}/m/${width}x0` : `${stripped}/m/`;
+}
+
+export function buildSrcset(
+  url: string | null | undefined,
+  widths: readonly number[]
+): string | undefined {
+  if (!url) return undefined;
+  return widths.map((w) => `${transformImageUrl(url, w)} ${w}w`).join(', ');
+}
+
+export function imageAlt(
+  asset: SbAsset | undefined,
+  fallback: string,
+  context?: string
+): string {
+  if (asset?.alt) return asset.alt;
+  if (import.meta.env.DEV && asset?.filename) {
+    const where = context ? ` (${context})` : '';
+    console.warn(
+      `[storyblok] Image missing alt text${where}: ${asset.filename}`
+    );
+  }
+  return fallback;
 }
 
 export interface SbAsset {

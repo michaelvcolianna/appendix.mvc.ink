@@ -1,7 +1,15 @@
 <script lang="ts">
   import { renderMarkdown } from '$lib/markdown';
-  import { transformImageUrl, withBook } from '$lib/storyblok';
+  import {
+    buildSrcset,
+    imageAlt,
+    transformImageUrl,
+    withBook
+  } from '$lib/storyblok';
   import type { PageData } from './$types';
+
+  const ENTRY_IMAGE_WIDTHS = [360, 540, 720, 1080];
+  const ENTRY_IMAGE_SIZES = '(min-width: 400px) 360px, 100vw';
 
   let { data }: { data: PageData } = $props();
 
@@ -23,8 +31,14 @@
   {#if fields.image?.filename}
     <div class="entry-image-wrap">
       <img
-        src={transformImageUrl(fields.image.filename)}
-        alt={fields.image.alt ?? fields.displayName}
+        src={transformImageUrl(fields.image.filename, 720)}
+        srcset={buildSrcset(fields.image.filename, ENTRY_IMAGE_WIDTHS)}
+        sizes={ENTRY_IMAGE_SIZES}
+        alt={imageAlt(
+          fields.image,
+          fields.displayName,
+          `entry image: ${category}/${fields.displayName}`
+        )}
       />
     </div>
   {/if}

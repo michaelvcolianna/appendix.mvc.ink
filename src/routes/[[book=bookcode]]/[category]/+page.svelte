@@ -1,6 +1,16 @@
 <script lang="ts">
-  import { transformImageUrl, withBook } from '$lib/storyblok';
+  import {
+    buildSrcset,
+    imageAlt,
+    transformImageUrl,
+    withBook
+  } from '$lib/storyblok';
   import type { PageData } from './$types';
+
+  const HERO_WIDTHS = [480, 768, 960, 1280, 1600, 1920];
+  const HERO_SIZES = '(min-width: 1024px) 920px, 100vw';
+  const THUMB_WIDTHS = [56, 112, 168];
+  const THUMB_SIZES = '52px';
 
   let { data }: { data: PageData } = $props();
 
@@ -18,8 +28,14 @@
   {#if listing.content.image?.filename}
     <div class="hero-image-wrap">
       <img
-        src={transformImageUrl(listing.content.image.filename)}
-        alt={listing.content.image.alt ?? listing.name}
+        src={transformImageUrl(listing.content.image.filename, 1280)}
+        srcset={buildSrcset(listing.content.image.filename, HERO_WIDTHS)}
+        sizes={HERO_SIZES}
+        alt={imageAlt(
+          listing.content.image,
+          listing.name,
+          `category hero: ${categorySlug}`
+        )}
       />
       <div class="hero-overlay"></div>
       <h1 class="hero-title">{listing.name}</h1>
@@ -41,8 +57,14 @@
           {#if entry.image?.filename}
             <div class="entry-thumb-wrap">
               <img
-                src={transformImageUrl(entry.image.filename)}
-                alt={entry.image.alt ?? entry.displayName}
+                src={transformImageUrl(entry.image.filename, 112)}
+                srcset={buildSrcset(entry.image.filename, THUMB_WIDTHS)}
+                sizes={THUMB_SIZES}
+                alt={imageAlt(
+                  entry.image,
+                  entry.displayName,
+                  `entry thumb: ${categorySlug}/${entry.slug}`
+                )}
               />
             </div>
           {:else}

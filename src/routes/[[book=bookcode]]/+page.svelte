@@ -1,7 +1,15 @@
 <script lang="ts">
   import { renderMarkdown } from '$lib/markdown';
-  import { transformImageUrl, withBook } from '$lib/storyblok';
+  import {
+    buildSrcset,
+    imageAlt,
+    transformImageUrl,
+    withBook
+  } from '$lib/storyblok';
   import type { PageData } from './$types';
+
+  const CARD_WIDTHS = [320, 480, 640, 768, 960];
+  const CARD_SIZES = '(min-width: 960px) 460px, 100vw';
 
   let { data }: { data: PageData } = $props();
 </script>
@@ -20,8 +28,14 @@
       {#if listing.content.image?.filename}
         <div class="card-image-wrap">
           <img
-            src={transformImageUrl(listing.content.image.filename)}
-            alt={listing.content.image.alt ?? listing.name}
+            src={transformImageUrl(listing.content.image.filename, 640)}
+            srcset={buildSrcset(listing.content.image.filename, CARD_WIDTHS)}
+            sizes={CARD_SIZES}
+            alt={imageAlt(
+              listing.content.image,
+              listing.name,
+              `home card: ${listing.slug}`
+            )}
           />
         </div>
       {/if}
