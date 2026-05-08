@@ -9,7 +9,7 @@
   import type { PageData } from './$types';
 
   const ENTRY_IMAGE_WIDTHS = [360, 540, 720, 1080];
-  const ENTRY_IMAGE_SIZES = '(min-width: 400px) 360px, 100vw';
+  const ENTRY_IMAGE_SIZES = 'min(360px, calc(100vw - 56px))';
 
   let { data }: { data: PageData } = $props();
 

@@ -7,8 +7,8 @@
   } from '$lib/storyblok';
   import type { PageData } from './$types';
 
-  const HERO_WIDTHS = [480, 768, 960, 1280, 1600, 1920];
-  const HERO_SIZES = '(min-width: 1024px) 920px, 100vw';
+  const HERO_WIDTHS = [360, 480, 640, 768, 960, 1280, 1600, 1920];
+  const HERO_SIZES = '(min-width: 1016px) 904px, calc(100vw - 56px)';
   const THUMB_WIDTHS = [56, 112, 168];
   const THUMB_SIZES = '52px';
 

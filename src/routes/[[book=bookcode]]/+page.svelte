@@ -8,8 +8,8 @@
   } from '$lib/storyblok';
   import type { PageData } from './$types';
 
-  const CARD_WIDTHS = [320, 480, 640, 768, 960];
-  const CARD_SIZES = '(min-width: 960px) 460px, 100vw';
+  const CARD_WIDTHS = [360, 480, 640, 768, 960];
+  const CARD_SIZES = '(min-width: 960px) 440px, calc(100vw - 56px)';
 
   let { data }: { data: PageData } = $props();
 </script>
