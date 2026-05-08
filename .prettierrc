@@ -1,5 +1,6 @@
 {
   "bracketSameLine": true,
+  "useTabs": false,
   "svelteBracketNewLine": true,
   "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
   "plugins": ["prettier-plugin-svelte"],
